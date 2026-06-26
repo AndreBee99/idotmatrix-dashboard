@@ -72,6 +72,7 @@ This project relies on, interfaces with, or was inspired by the following open-s
 *   **Audio Capture & Analysis**: High-performance WASAPI audio loopback and spectrum calculation powered by [NAudio](https://github.com/naudio/NAudio).
 *   **Weather Forecasts**: Geocoding and weather data courtesy of the free, non-commercial [Open-Meteo API](https://open-meteo.com/).
 *   **Pokémon Sprites**: Live pixel-art animations dynamically loaded using the [PokéAPI](https://pokeapi.co/).
+*   **Country Flags**: Dynamic flag assets retrieved courtesy of [FlagCDN](https://flagcdn.com/).
 *   **Notification and Media Session Integration**: Integrated using Windows WinRT/UWP API contracts (`UserNotificationListener` and `GlobalSystemMediaTransportControlsSessionManager`).
 
 ---
