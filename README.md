@@ -1,26 +1,26 @@
 # iDotMatrix WPF DIY Dashboard
 
-A high-performance, neon-themed C# WPF desktop dashboard for the **iDotMatrix 32x32 LED Panel** (e.g. `IDM-XXXXXX`). It consolidates media controllers, weather updates, meeting notifications, system diagnostics, and webcam feeds into a customizable, modular carousel cycling at a fluid 20 FPS over Bluetooth LE.
+A high-performance, neon-themed WPF desktop companion application for the **iDotMatrix 32x32 LED Panel** (e.g., `IDM-XXXXXX`).
+
+The application runs in the background (with Windows system tray integration) and connects to your LED display over Bluetooth LE to stream custom visual modules, real-time system stats, and live notifications at a fluid 20 FPS.
 
 ---
 
-## Key Features
+## What the App Does
 
-*   **Modular Scene Carousel**: Cycle through visual modules with custom durations, order, and toggle-able states. Retro screen distortion transition shaders (VHS tracking glitch, Paint Melt, and Sine Wave) apply dynamically between swaps.
-*   **System Notification Interceptor**: Real-time intercept of Windows toast notifications (Slack, Discord, Outlook, Spotify, etc.) via UWP `UserNotificationListener`. Instantly interrupts the carousel to display:
-    *   **Phase 1 (Large 16x16 icon)**: Displays a clean app logo in the center and scrolls the app name at the bottom in Cyan.
-    *   **Phase 2 (Small 8x8 icon)**: Scales the logo to the corner, scrolls the notification title in Magenta at the top, and scrolls the message body in White at the bottom.
-    *   **Pulsing Alert Border**: Neon border pulses intensity to grab attention.
-    *   *Includes hand-crafted, high-contrast pixel-art fallbacks for Discord (Clyde), Spotify, Slack, Outlook, and WhatsApp to bypass unpackaged WinRT asset limitations.*
-*   **Analog Instrument Resource Monitor**: Displays CPU, GPU (Direct3D engines), RAM, and active Disk Write time in a 2x2 grid as **4 sports car dashboard dials** with real-time needle sweeps and a redline indicator for loads exceeding 80%.
-*   **Music Media Sync**: Subscribes to Windows System Media Transport Controls (SMTC) to downscale album art, sync track progression, scroll song details, and modulate a glowing status bar in sync with real-time soundcard bass frequencies.
-*   **WASAPI Audio Visualizer**: 32-band spectrum analyzer capturing system audio loopback with peak decay indicators.
-*   **Weather forecaster**: Pulls Open-Meteo forecaster data with customized animated weather icons (Sun, clouds, rain, snow, lightning).
-*   **Calendarsync**: Reads private/public iCal feeds to display upcoming meeting countdowns.
-*   **Webcam Mirror**: Captures low-latency 32x32 webcam feeds with vibrancy/contrast enhancement.
-*   **Bouncing DVD Logo**: Bounces the classic logo changing colors on walls and flashing on corner hits.
-*   **State Persistence**: Settings (playlists, weather location, calendar feed, and target MAC address) automatically save to `%APPDATA%\iDotMatrixDashboard\config.json`.
-*   **System Tray Integration**: Can be minimized to the system tray, running in the background, with double-click restoration and right-click menu controls.
+*   **Real-Time Notification Interceptor**: Instantly overrides the display to show clean, customized pixel-art alerts (Slack, Discord, Outlook, Spotify, WhatsApp, etc.) with pulsing neon alert borders.
+*   **Dynamic Scene Carousel**: Automatically cycles through a customizable playlist of visual modules with adjustable timings and retro screen distortion transition shaders (VHS tracking glitch, Paint Melt, and Sine Waves).
+*   **Background Operation & Persistence**: Minimizes to the system tray, auto-connects to your screen, and saves all settings (weather location, MAC address, calendar feeds) to a local configuration file.
+
+---
+
+## Visual Scenes Overview
+
+*   **Music Media Sync**: Displays active track metadata and album art from Windows Media Session (SMTC), with a **32-band WASAPI audio spectrum visualizer** that pulses in sync with your system's bass frequencies.
+*   **Analog Instrument Monitor**: Visualizes CPU, GPU, RAM, and Disk load as **4 sports car dashboard dials** with real-time needle sweeps and redline indicators for high loads.
+*   **Weather & Calendar Forecasts**: Pulls Open-Meteo weather data to display animated weather icons, and syncs private/public iCal feeds to display meeting countdowns.
+*   **Webcam Mirror**: Captures low-latency webcam feeds with real-time contrast and vibrancy enhancements.
+*   **Bouncing DVD Logo**: A nostalgic screensaver scene that changes colors on wall bounces and flashes when hitting corners.
 
 ---
 
