@@ -58,6 +58,7 @@ namespace idotmatrix_gui
             Items.Add(new CarouselItem(new VisualizerScene(), true, 10));
             Items.Add(new CarouselItem(new CalendarSyncScene(), false, 10)); // Disabled by default until URL is set
             Items.Add(new CarouselItem(new PokemonChallengeScene(), true, 10));
+            Items.Add(new CarouselItem(new CountryGuessScene(), true, 10));
             Items.Add(new CarouselItem(new WebcamScene(), false, 10)); // Disabled by default
         }
 
