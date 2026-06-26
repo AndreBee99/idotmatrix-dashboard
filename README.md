@@ -60,6 +60,27 @@ A high-performance, neon-themed C# WPF desktop dashboard for the **iDotMatrix 32
 
 ---
 
+## Credits & Attributions
+
+This project relies on, interfaces with, or was inspired by the following open-source projects, datasets, and APIs:
+
+*   **iDotMatrix BLE Protocol**: Reverse-engineered protocol specifications derived from the [python3-idotmatrix-library](https://github.com/derkalle4/python3-idotmatrix-library) by `derkalle4` and its various forks/discussions.
+*   **Audio Capture & Analysis**: High-performance WASAPI audio loopback and spectrum calculation powered by [NAudio](https://github.com/naudio/NAudio).
+*   **Weather Forecasts**: Geocoding and weather data courtesy of the free, non-commercial [Open-Meteo API](https://open-meteo.com/).
+*   **Pokémon Sprites**: Live pixel-art animations dynamically loaded using the [PokéAPI](https://pokeapi.co/).
+*   **Notification and Media Session Integration**: Integrated using Windows WinRT/UWP API contracts (`UserNotificationListener` and `GlobalSystemMediaTransportControlsSessionManager`).
+
+---
+
+## AI Vibe Code Disclaimer
+
+> [!NOTE]
+> **This project is 100% AI-generated vibe code.**
+> It was crafted in a collaborative pair-programming journey with **Antigravity**, an agentic AI coding assistant designed by the Google DeepMind team. The entire architecture—including custom C# Bluetooth LE writing, real-time audio FFT, WinRT event hooks, retro HLSL-style screen distortion shaders, UI layouts, and tray integration—was brainstormed, coded, and iterated by AI. Enjoy the vibes!
+
+---
+
 ## License
 
 This project is licensed under the MIT License.
+
