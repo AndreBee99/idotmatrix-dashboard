@@ -17,5 +17,16 @@ namespace idotmatrix_gui
         /// Optional clean up when the scene is stopped or switched.
         /// </summary>
         void Stop();
+
+        /// <summary>
+        /// Indicates if this scene manages its own completion timing (e.g. waiting for scrolls).
+        /// </summary>
+        bool CustomCompletion => false;
+
+        /// <summary>
+        /// True if the scene is finished and ready to transition to the next scene.
+        /// Only used if CustomCompletion is true.
+        /// </summary>
+        bool IsDone => false;
     }
 }

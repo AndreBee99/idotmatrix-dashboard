@@ -156,9 +156,20 @@ namespace idotmatrix_gui
 
             _frameCountInScene++;
 
-            // Check if scene duration has elapsed
+            // Check if scene duration has elapsed or custom completion is met
             double elapsedSeconds = (DateTime.Now - _sceneStartTime).TotalSeconds;
-            if (elapsedSeconds >= currentItem.DurationSeconds && _transitionFramesLeft == 0)
+            bool shouldSwitch = false;
+
+            if (currentItem.Scene.CustomCompletion)
+            {
+                shouldSwitch = currentItem.Scene.IsDone || elapsedSeconds >= 25.0; // 25s fallback safety limit
+            }
+            else
+            {
+                shouldSwitch = elapsedSeconds >= currentItem.DurationSeconds;
+            }
+
+            if (shouldSwitch && _transitionFramesLeft == 0)
             {
                 SelectNextScene();
                 currentItem = GetCurrentItem();

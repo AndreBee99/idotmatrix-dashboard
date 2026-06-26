@@ -14,9 +14,13 @@ namespace idotmatrix_gui
 
         private DateTime _phaseStartTime = DateTime.MinValue;
         private readonly int _teaseDurationMs = 5000;
-        private readonly int _revealDurationMs = 5000;
+        private int _revealStartFrame = -1;
+        private bool _isDone = false;
 
         private static readonly Random _rand = new Random();
+
+        public bool CustomCompletion => true;
+        public bool IsDone => _isDone;
 
         public Color[,] DrawFrame(int frameCount)
         {
@@ -78,11 +82,22 @@ namespace idotmatrix_gui
 
             string scrollText;
             Color textColor;
+            int bannerTextWidth = 0;
 
             if (isRevealPhase)
             {
                 scrollText = $"ANSWER IS {_answer}!  ~  ";
                 textColor = Color.FromRgb(30, 215, 96); // Neon Green
+                bannerTextWidth = PixelFont.MeasureTextWidth(scrollText);
+
+                if (_revealStartFrame == -1)
+                {
+                    _revealStartFrame = frameCount;
+                }
+                else if (frameCount - _revealStartFrame >= 32 + bannerTextWidth)
+                {
+                    _isDone = true;
+                }
 
                 // Flashing green border inside wood frame on reveal
                 if ((frameCount / 3) % 2 == 0)
@@ -96,25 +111,21 @@ namespace idotmatrix_gui
             {
                 scrollText = "SOLVE THE EQUATION!  ~  ";
                 textColor = Color.FromRgb(255, 255, 0); // Yellow
+                bannerTextWidth = PixelFont.MeasureTextWidth(scrollText);
             }
 
-            int bannerTextWidth = PixelFont.MeasureTextWidth(scrollText);
             int scrollRange = bannerTextWidth + 8;
             int bannerX = 32 - (frameCount % scrollRange);
             PixelFont.DrawText(canvas, scrollText, bannerX, 26, textColor);
-
-            // Cycle check: If both phases have run, reset
-            if (elapsedMs > _teaseDurationMs + _revealDurationMs)
-            {
-                _isLoaded = false;
-            }
 
             return canvas;
         }
 
         public void Stop()
         {
-            // No resources to clean up
+            _isLoaded = false;
+            _revealStartFrame = -1;
+            _isDone = false;
         }
 
         private void GenerateProblem()

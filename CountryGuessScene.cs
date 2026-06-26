@@ -18,9 +18,13 @@ namespace idotmatrix_gui
 
         private DateTime _phaseStartTime = DateTime.MinValue;
         private readonly int _teaseDurationMs = 5000;
-        private readonly int _revealDurationMs = 5000;
+        private int _revealStartFrame = -1;
+        private bool _isDone = false;
 
         private readonly HttpClient _httpClient = new HttpClient();
+
+        public bool CustomCompletion => true;
+        public bool IsDone => _isDone;
 
         private static readonly (string Code, string Name)[] Countries = new[]
         {
@@ -239,11 +243,22 @@ namespace idotmatrix_gui
 
             string scrollText;
             Color textColor;
+            int textWidth = 0;
 
             if (isRevealPhase)
             {
                 scrollText = $"IT'S {_countryName.ToUpper()}!  ~  ";
                 textColor = Color.FromRgb(30, 215, 96); // Neon Green
+                textWidth = PixelFont.MeasureTextWidth(scrollText);
+
+                if (_revealStartFrame == -1)
+                {
+                    _revealStartFrame = frameCount;
+                }
+                else if (frameCount - _revealStartFrame >= 32 + textWidth)
+                {
+                    _isDone = true;
+                }
 
                 // Add a flashing border transition in reveal phase
                 if ((frameCount / 3) % 2 == 0)
@@ -257,26 +272,22 @@ namespace idotmatrix_gui
             {
                 scrollText = "GUESS THE COUNTRY!  ~  ";
                 textColor = Color.FromRgb(255, 255, 255); // White
+                textWidth = PixelFont.MeasureTextWidth(scrollText);
             }
 
-            int textWidth = PixelFont.MeasureTextWidth(scrollText);
             int scrollRange = textWidth + 8;
             int textX = 32 - (frameCount % scrollRange);
             PixelFont.DrawText(canvas, scrollText, textX, 26, textColor);
-
-            // Cycle check: If both phases have run, reset
-            if (elapsedMs > _teaseDurationMs + _revealDurationMs)
-            {
-                _countryName = ""; // Force reload next time
-                _isLoaded = false;
-            }
 
             return canvas;
         }
 
         public void Stop()
         {
-            // No resources to dispose
+            _countryName = "";
+            _isLoaded = false;
+            _revealStartFrame = -1;
+            _isDone = false;
         }
 
         private async Task FetchRandomCountryAsync()
