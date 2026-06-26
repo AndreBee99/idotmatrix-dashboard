@@ -1,0 +1,31 @@
+# .NET / Visual Studio build outputs
+bin/
+obj/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+ARM/
+ARM64/
+
+# Visual Studio files
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Local configuration containing personal MAC address, Weather city, iCal URL
+config.json
+
+# LLM Agent / Antigravity files & artifacts
+.gemini/
+.agents/
+walkthrough.md
+implementation_plan.md
+task.md
+
+# OS temporary files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
