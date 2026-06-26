@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:idotmatrix_gui"
         mc:Ignorable="d"
-        Title="iDotMatrix DIY Dashboard" Height="750" Width="1200"
+        Title="BeeMatrix DIY Dashboard" Height="750" Width="1200"
         Background="#0B0B0F" Foreground="#E5E5E9"
         WindowStartupLocation="CenterScreen" SnapsToDevicePixels="True"
         UseLayoutRounding="True">
@@ -152,7 +152,7 @@
 
             <!-- App Title with Neon Accent -->
             <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
-                <TextBlock Text="iDotMatrix" FontSize="26" FontWeight="Black" Foreground="White"/>
+                <TextBlock Text="BeeMatrix" FontSize="26" FontWeight="Black" Foreground="White"/>
                 <TextBlock Text=" DIY DASHBOARD" FontSize="26" FontWeight="Light" Foreground="{StaticResource AccentCyan}"/>
             </StackPanel>
 

@@ -514,7 +514,7 @@ namespace idotmatrix_gui
         private void InitializeTrayIcon()
         {
             _notifyIcon = new System.Windows.Forms.NotifyIcon();
-            _notifyIcon.Text = "iDotMatrix Dashboard";
+            _notifyIcon.Text = "BeeMatrix Dashboard";
 
             try
             {
@@ -575,7 +575,7 @@ namespace idotmatrix_gui
                 Hide();
                 if (_notifyIcon != null)
                 {
-                    _notifyIcon.ShowBalloonTip(3000, "iDotMatrix Dashboard", "Minimized to tray. Double-click the icon to restore.", System.Windows.Forms.ToolTipIcon.Info);
+                    _notifyIcon.ShowBalloonTip(3000, "BeeMatrix Dashboard", "Minimized to tray. Double-click the icon to restore.", System.Windows.Forms.ToolTipIcon.Info);
                 }
             }
             else

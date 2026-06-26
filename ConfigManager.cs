@@ -26,7 +26,7 @@ namespace idotmatrix_gui
     {
         private static readonly string ConfigFolder = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-            "iDotMatrixDashboard"
+            "BeeMatrixDashboard"
         );
         private static readonly string ConfigPath = Path.Combine(ConfigFolder, "config.json");
 

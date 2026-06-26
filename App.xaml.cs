@@ -17,10 +17,10 @@ namespace idotmatrix_gui
             try
             {
                 // Explicitly set the AppUserModelID so Windows permits toast notifications and listener authorization
-                SetCurrentProcessExplicitAppUserModelID("iDotMatrix.Dashboard.App");
+                SetCurrentProcessExplicitAppUserModelID("BeeMatrix.Dashboard.App");
 
                 // Automatically create a Start Menu shortcut with the same AUMID (required by Windows to authorize listeners)
-                ShellLinkHelper.CreateStartMenuShortcut("iDotMatrix.Dashboard.App");
+                ShellLinkHelper.CreateStartMenuShortcut("BeeMatrix.Dashboard.App");
             }
             catch
             {

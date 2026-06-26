@@ -1,4 +1,8 @@
-# iDotMatrix WPF DIY Dashboard
+# BeeMatrix DIY Dashboard
+
+<p align="center">
+  <img src="logo.png" alt="BeeMatrix Logo" width="200" height="200" />
+</p>
 
 A high-performance, neon-themed WPF desktop companion application for the **iDotMatrix 32x32 LED Panel** (e.g., `IDM-XXXXXX`).
 
@@ -36,7 +40,7 @@ The application runs in the background (with Windows system tray integration) an
 
 1.  Clone the repository:
     ```bash
-    git clone https://github.com/yourusername/idotmatrix-dashboard.git
+    git clone https://github.com/AndreBee99/idotmatrix-dashboard.git
     cd idotmatrix-dashboard
     ```
 2.  Build and run the project using the dotnet CLI:

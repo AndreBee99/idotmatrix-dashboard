@@ -104,7 +104,7 @@ namespace idotmatrix_gui
                     @"Microsoft\Windows\Start Menu\Programs"
                 );
                 
-                string shortcutPath = Path.Combine(startMenuPath, "iDotMatrix Dashboard.lnk");
+                string shortcutPath = Path.Combine(startMenuPath, "BeeMatrix.lnk");
                 
                 // Get the current running executable path
                 string exePath = System.Diagnostics.Process.GetCurrentProcess().MainModule?.FileName ?? "";
@@ -114,7 +114,7 @@ namespace idotmatrix_gui
                 var link = (IShellLinkW)new ShellLink();
                 link.SetPath(exePath);
                 link.SetWorkingDirectory(Path.GetDirectoryName(exePath) ?? "");
-                link.SetDescription("iDotMatrix Controller & Scene Builder");
+                link.SetDescription("BeeMatrix Controller & Scene Builder");
 
                 // Set AppUserModelID property on the shortcut
                 var store = (IPropertyStore)link;
