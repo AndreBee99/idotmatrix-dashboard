@@ -8,18 +8,15 @@ namespace idotmatrix_gui
     {
         public string Name { get; set; } = "";
         public Color BodyColor { get; set; }
-        public bool HasGoldWheels { get; set; }
-        public bool HasSpoiler { get; set; }
-        public int Type { get; set; } // 0: GT-R, 1: Supra, 2: RX-7, 3: WRX STI
+        public Color AccentColor { get; set; } // Rim color
+        public string[] Grid { get; set; } = new string[0];
     }
 
     public class CarHighwayScene : IScene
     {
         public string Name => "Highway Outrun";
 
-        private int _currentCarIndex = 0;
         private readonly List<TunerCar> _cars = new List<TunerCar>();
-        private readonly Random _rand = new Random();
 
         // Parallax mountain heights
         private readonly int[] _mountainHeights = {
@@ -29,40 +26,120 @@ namespace idotmatrix_gui
 
         public CarHighwayScene()
         {
-            // 1. Nissan Skyline GT-R R34 (Bayside Blue)
+            // 1. Nissan Skyline GT-R R34 (240x20 Bayside Blue)
             _cars.Add(new TunerCar {
                 Name = "SKYLINE R34",
-                BodyColor = Color.FromRgb(0, 70, 220),
-                HasGoldWheels = false,
-                HasSpoiler = true,
-                Type = 0
+                BodyColor = Color.FromRgb(0, 65, 210),
+                AccentColor = Color.FromRgb(200, 200, 200),
+                Grid = new string[] {
+                    "............................................................................................................BBBBBGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGBBBB.......................................................................",
+                    "......................................................................................................BBBBBGGGGGGGGGGGBBBBBBBBBBBBBBBBBBBBBBBBGGGGBBBBBBBBBBGGGGKKKGGGGGGGGBBBBBB...............................................................",
+                    "...............................................................................................BBBBBBGGGGGGGBBB...............................BKGGG............BBBGGGGGGGGGGGGGGGGBBBBBBBBBBBB...............................HHHHHHBBGGGGGGH....",
+                    ".......................................................................................BBBBBBBBGGGGGGGBBB......................................BGGGG................BBBGGGGGGGGGGGGGGGGGBBBBBB.BBBBBBB.......................HGGGGGGGGGGGBH.....",
+                    "................................................................................BBBBBBBBBBGGGGGGGGGBB...........................................GGGGG.....................BGGGGGGGGGGGGGGGGGGGGBBBBBBBBBBHHHHHHHHHHHHHHHH...HGGGGGGGGG..........",
+                    "...................................................................BBBB...BBBBBB..BBBGGGGGGGGGGGGGGGKG..........................................BGGGGB.BBBBBBBBBBBBBBBBBBBBGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGBGGGGGH.....",
+                    "....................................BBBBBBBBBBBBBBBBGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGBBBBBBBBBBBGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGBGGKGHGH....",
+                    ".................BBBBGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGKGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGBGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG.HG....",
+                    "........BBBBGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGBBBBBGGGGGGGGGGGGGGGGGGGGGGGGGBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBGGGGGGGGGGGGGGGGGGGGGGGGGGGGHGB...",
+                    "...BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBKKKKKBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB...",
+                    "...BKBB......BB.BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBH",
+                    ".BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBHHHBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
+                    "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB..BBBB.BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB.BBBKBBBBBBBB..BBBB.BBBBBBBBBBBBHHBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
+                    "BBBBBBBBBBBBBBBBBBBBBBB..BBBB..BKKBBBBBBBBB..BBBKB..BBBBBBBBBBBBB.BBBBBBBBBBBBBBBKBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB.BBBBBBBBBBBB..BBBKB...BBBBBBBBBKBB.HBBBBBBBBBBBBBBBBBBBBBBBBBBBBB.",
+                    ".BBBBBBBBBBBBBBBBBBBB...BBBB..BBBBBBB.BBBBBBBBBBBBBBBBBBB.BKBBBBKB.BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB.BKBBBBB..BBBBBBBBBBBBBBBBBB.HKBBBBKH.BBBBBBBBBBBBBBBBBBBBBBBBBBBBBH",
+                    "..BBBBBBBKBBBBBBBBBBBBBBBBBB..BBBBBKB...BBBKBBBBBBBBBBBB..BKBBBBKB..BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB..BBBBBKB...BBBKBBBBBBBBKBBB...BBBBBKB..BBBBBBBBBBBBBBBBBBBBBBBBBBBKB",
+                    "...BBBBBBBBBBBBBBBBBBBBBBBBB..BBBBBBBBBBBBBBBBBKKBBBBBBBBBBBBBBBB...BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB..BBBBBBBBBBBBBBBBBKKBBBBBBBBBBBBBBKB...BBBBBBBBBBBBBBBBBBBBBBBBBHHH.",
+                    ".BBBBBBBBBBBBBBBBBBBBBBBBBBB....BBKBBBBBBB....BBBB...BBBBBBBKBBB....BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB....BBKBBBBBBB....BBBB....BBBBBBKBBH....HBBBBBBBBBBHHHHHH............",
+                    ".....BBBBBBBBBBBBBBBBBBBBBBB......BBBBBBBBBBBBBBBBBBBBBBBBBBBB.......BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB.......BBBBBBBBBBBBBBBBBBBBBBBBBBBH...................................",
+                    ".....................................BBBBBBBBBBBBBBBBBBBBB...........................................................................................................................BBBBBBBBBBBBBBBBBBBB.......................................",
+                }
             });
 
-            // 2. Toyota Supra MK4 (Candy Orange)
+            // 2. Toyota Supra MK4 (240x20 Candy Orange)
             _cars.Add(new TunerCar {
                 Name = "SUPRA MK4",
-                BodyColor = Color.FromRgb(255, 90, 0),
-                HasGoldWheels = false,
-                HasSpoiler = true,
-                Type = 1
+                BodyColor = Color.FromRgb(255, 85, 0),
+                AccentColor = Color.FromRgb(190, 190, 195),
+                Grid = new string[] {
+                    "....................................................................................................................BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB.........................................................................",
+                    ".............................................................................................................BBBBGGGKBBBBBBBKKKBBBGGGGGGGGGGGGGGBBBBBBBBBBBBBBBBBBBBBBBBBBBBGGGBBBBBBB....................................HHBBBBBBBBBBBBBBH.....",
+                    "......................................................................................................BBBBGGGGBKKKKKKKKGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGKKGGGGGGBBBBBBBBBBBBBBBBBBBBBGGGGGGGBBBBB...................HBBBKKKKBBBBBBBBBBBH.......",
+                    "..............................................................................................BBBBBGGGGGBBBBKKKGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGKKGGGGGGGGGGGGKKKKBBBBBBBBBBBBBBBBBBBBBBGGGGGGGGBBHHHHHHBBBBKKKBBBBBBBBBBBBBH..........",
+                    ".......................................................................................BBBBGGGGGGGBBBBBBBBBKGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGKKKKKKKKKKKGGGGGGGGGGKKKKKKBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBKKKBBBBBBBBBBBBBBBKBBHH........",
+                    "........................................................................BBBBBBBBBBBBGGGGGGGGGBBBBKKBBBBBBBBBKGKKGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGKKKKKKKKKKKKKKKKKKKKKKKKBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB.......",
+                    "........................................BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBKBBBBBBBKBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBKG......",
+                    ".........................BBBBBBLLLLLLLLLBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBKGH....",
+                    "...............BBBBBLLLLLLLLLLLLLLLLLLLLBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
+                    "........BBBBBBBBBBKLLLLLLLLLLLLLLLLLLLLLBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBKKKKBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBK",
+                    "....BBBBBBBBBBBBBLLLLLLLLLLLLLLLLLLLLKKKKKKKKKKKKKKKKKKKKKKKBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBKKKKKKKKKKKKKKKKKKKKKKKKKBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
+                    ".BLLLLBBBBBBBBLLLLLLLLLLLLLLLLLLKKKKKKKKKKKKKKKBBKKKKKKKKKKKKKKKBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBKKKKKKKKKKKKKKKKBBKKKKKKKKKKKKKKKBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
+                    "KLLLLLLLLLLLLLLLLLLLLLLLLLLLLLKKKKKKKKKKKKKKKKKBBKKKKKKKKKKKKKKKKKKBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBKBBBBBBBBBBBBBKKKKKKKKKKKKKKKKKKBKKKKKKKKKKKKKKKKKKBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBKB",
+                    "BLLLKBBBBBLLLLLLLLLLLLLLLLLLLKKKKKKKKBKKKBBBKKKBKBKKBKBBBKBBKKKKKKKKKBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBKKKBBBBBBBBKKKKKKKKBKKKBBBBKKBKBKKKBKBBKBBKKKKKKKKKBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
+                    ".BKLLLLLKKLLLLLLLLLLLLLLLLLLKKKKKKBKKKKBBBKBKKBKKKBKKBBBBBKKKKKKKKKKKKBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBKBBBBBBBBKKKKKKKKKKKKBBKBKKBKKKBKKBBBBBKKKKKKKKKKKKBBBBBBBBBBBBBBBBBBBBBBBBBBBBKKH",
+                    ".BKLLLLLLLLLLLLLLLLLLLLLLLLKKKKKKKKKKKKKBBKKBBKKBKBBBKKKKKKKKKKKKKKKKKBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBKKKKKKKKKKKKBBKKBBKKBKKBBKKBKKKKKBKKKKKKKKKKKKBBBBBBBKKKKKKKBBBBBBBBBBKKK",
+                    ".BKKKKKKLKKKKKKKKKKKKLLLLLLKKKKKKKKKBBKKKKBBBBBBKBBBBBBKKKKBBKKKKKKKKKKKBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBKBBBBBBBBBBBBBBBBBBBBBKKKKKKKKBBKKKKBBBBBBKBBBBBBKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKBKBBBBBBBBBBBH",
+                    ".BKKKKKKKKKKKKKKKKKKKKKKKKKKBBBBBBKKKKBKKBBKKKKKKKKKKKBBKBKKKKKBBBBBBBKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKBBBBKKKKKKKBBKKKKKKKKKKKBBKBBKKKKBBBBBBBBBBBBBBBBBBBBHHHHHHHHH.........",
+                    "...........BBBBBBBBBBBBBBBBB......BBBKKKKKKKKKKKKKKKKKKKKKKKBBB.......BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB....BBBKKKKKKKKKKKKKKKKKKKKKKKBBH......................................",
+                    "...BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBHHHH...",
+                }
             });
 
-            // 3. Mazda RX-7 FD (Vintage Red)
+            // 3. Mazda RX-7 FD (240x20 Vintage Red)
             _cars.Add(new TunerCar {
                 Name = "RX-7 FD",
-                BodyColor = Color.FromRgb(220, 0, 30),
-                HasGoldWheels = false,
-                HasSpoiler = false,
-                Type = 2
+                BodyColor = Color.FromRgb(215, 0, 25),
+                AccentColor = Color.FromRgb(180, 180, 185),
+                Grid = new string[] {
+                    ".................................................................................................................BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB.B........................................................................",
+                    ".........................................................................................................BBBBBBBBBBBBBBKKBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBKBBBBBBBBBBBBBBBBBBBB.............................................................",
+                    "...................................................................................................BBBBBB...BBBBBBBBBBBBBBBB.............................BBBBBBBBBBBBBBBBBBBBBBB...BBBBBBBBBB...................................................",
+                    "............................................................................................BBBBBB.....BBBBBBBBBBBBBB.....................................BKKKBBBBBBBBBBBBBBBBKBBBB..........BBBBBBBB...........................................",
+                    "......................................................................................BBBBBBB.....BBBBBBBBBBBBB...........................................KKKKKKKBBBBBBBBBBBBBBBBBBBBBBBBBBB......BBBBBBBHHHHHH...............HHHHHHHHHBBB......",
+                    "...............................................................................BBBBBBB.......BBBBBBBBBBBBBBBBBBB.........................................BKKKKKKBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBHHHBBBBBBBBBBBBKBBBBBBH......",
+                    "....................................................BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB......",
+                    "..............................BBBBBLLLLLBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBKKKKKKKKKKKKKBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBKKKBH.BB......",
+                    "..................BBBLLLLLLLLLLLLLLLLLLLBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBKKKKB.HBH......",
+                    "...........BBLLLLLLLLLLLLLLLLLLLLLLLLLLLBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB......",
+                    ".....BLLLLLLLLLLLLLLLLLLLLLLLLLLLLLKKKKLBBBBBBBBBBBBKKKKBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBKKKKKBBBBBBBBBBBBBKKKKKBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBH.",
+                    "..BLLLLLLLLLLLLLLLLLLLLLLLLLLLLKKKKLLLLLBBBBBBBBBBBBBBBBBKKKKBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBKKKKKBBBBBBBBBBBBBBBBBBBBBBKKKKKBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
+                    "BLLLB...BLLLLLLLLLLLLLLLLLLLKKKKLLLBLLLLBBBBBKKBBBBBBBBBBBBBKKKKBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBKKKKKBBBBBBBBBBBBBBKBBBBBBKBBBBBKKKKKBBBBBBBBBBBHHHHHHHBBBBBBBBBBBBBBBHHB",
+                    "LKLLLLLLKKLLLLLLLLLLLLLLLLKKKKKLLLLLKKLLBBBBBBBBBBBBBBKKBBBBBKKKKKBBBBBBBBKBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBKKKKKBBBBKKKBBBBBBBBBBBBBBBKKKBBBBBKKKKKBHBBBBBBBBBBBBBBBBBBBBBBBBBBBBKBBH",
+                    ".LKLLLLLLLLLLLLLLLLLLLKLBKKKKKLLBLKKLLLLBBBBBBBB.BBBBBBKKKBBBKKKKKKBBKBBBBBBBBBBBBBBBBBBBBKBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBKBBKKKKKBBBBKKBBBBBBBBBBBBBBKBBBBKKKBBBKKKKKKBHBBBBBBBBBBBBBBBBBBBBBBBBBBBBH..",
+                    "..LLLLLLLLLLLLLLLLLLLLLLLKKKKKKLLBKKKB..BBBBBBBBBBB...BKKBBBBKKKKKKBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBKKKKKBBBBKKBB..BBBBBBBBBBB...BKKBBBBKKKKKKKHBBBBBBBBBBBBBBBBBBBBBKKKKKKBHH.",
+                    "...LLLLLLLLLLLLLLLLLLLLBLKKKKKKKLLBLLKLLBKBBB..BBBKBBKKBBBBBKKKKKKKKBBKBKKKKKBBBBBKKKKKKKBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKBKBBKBBKKKBBBBBKKBBBBBB...BBBKBBKKBBBBBKKKKKKKKBBBBBBBBBBKKKKKKKKKBBKBBBBBBBH..",
+                    ".BLLLLLLLLLLLLLLLLKKKKKLBLLLLLLKKKLLLLLLBBBBBBBBBBBBBBBBBKKKKBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB.....BBKKKBBBBBBBBBBBBBBBBBBBBBBBKKKKBHHHHHHHBBBBBBBBBHHHHHHHHHH............",
+                    "...............................BBLLKKKLLBBBBBBBBBBBBBBKKKBBB...............................................................................................................BBBBKKKBBBBBBBBBBBBBBBBKKKBBB........................................",
+                    "....................................BBLLBBKKKKKKKKBBBBBB.......................................................................................................................BBBBBBBKKKKKKKKBBBBBB............................................",
+                }
             });
 
-            // 4. Subaru WRX STI (Rally Blue)
+            // 4. Subaru WRX STI (240x20 Rally Blue)
             _cars.Add(new TunerCar {
                 Name = "WRX STI",
-                BodyColor = Color.FromRgb(0, 95, 195),
-                HasGoldWheels = true,
-                HasSpoiler = true,
-                Type = 3
+                BodyColor = Color.FromRgb(0, 90, 190),
+                AccentColor = Color.FromRgb(218, 165, 32),
+                Grid = new string[] {
+                    "...........................................................................................................BBBBBBBBBBGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGBBGGGGGGGGGG...........................................................",
+                    ".................................................................................................BBBGGGGGGGGGGGGGKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKGGGGGGGGGGGGGGGGBBBB............................HHBGGBGGGGGGGBHHH...",
+                    "........................................................................................BBBGGGGGKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKGGGGGGGGGGGGGGGBBB............HHGGKKKKKKKGGGGGGGGGGKGH...",
+                    "................................................................................BBBGGGGGKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKGGGGGGGGGGKKKGGGGGGBHHBGGKKKKKKGGGGGGGGGGGGGGGH.....",
+                    ".........................................................................BBBGGGGKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKGGGGGGGGGGGGGGGGKKKKKKKGGGGGGGGGGGGGGKGKGH.......",
+                    ".................................................................BBBGGGGGKKKKKKKKKKKKKKKKGGGGGGGKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGH......",
+                    "............................BBBBBBBBBBBBBBBBBBBBBBBBBGGGGGGGGGGGGGKKGGGGKKKKKKKKKKKKKKKKKKKKKKKGKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKGGKKGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGKGGGGGGGGGGGGGGGGGGGGGGGGGGKBBBBBBBBBBBBBBBKG......",
+                    ".....................BBBBBGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGKGGKGGGGGGGGGKKKKKKKKGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGKKKKKGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGBBBBBBBBBBBBBKBBKG.....",
+                    "..........BBBBGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGKKKKKKKKGKGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGBKBBBBBBBGK.....",
+                    "....BBBBBBBBBBBBBBBBBBBBBBBBKBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBKBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBKBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB...",
+                    "...BKBKKKKKKBBBBBBBBBBBLBBBBBBBBBBBBBBBBBBKKKKKKKKKKKKKKKKBBBBBBBBBBBBBBBBKBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBKBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBKKKKKKKKKKKKKKKKKBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBH.",
+                    "..BKBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBKKKKKKKKKKKKKKKKKKKKKKKKKKKKKBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBKBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBKKKKKKKKKKKKKKKKKKKKKKKKKKKKBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBKB",
+                    ".BKBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBKKKKKKKKBBBBBBKKKKKKKBBBBBKKKKKKKKBBBBBKBBKBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBKBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBKKKKKKKKBBBBBKKKKKKKKBBBBBKKKKKKKKBBBBBBBBBBBBBBBBBBBBBBBBBKBBBBBB",
+                    ".BBBKKKKKKKBBBBBBBBBBBBBBBBBBBBKKKKKKKBBBKKKBBBBKKKKBBBBBKKKBBBKKKKKKBBBBKBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBKKKKKKKBBBKKKBBBBKKKKBBBBKKKBBBKKKKKKKBBBBBBBBBBBBBBBBBBBBBBKKBBBBKB",
+                    ".BKBKKKKKKKKBBKBBBBBBBBBBBBBBBKKKKKKKBBBKKKBBKBBBBKBBBBKBBBKKBBBKKKKKKBBBBKBKBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBKBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBKKBBBKKKKKKKBBKKKBBBBBBBBBBBBBKBBKKKBBBKKKKKKBBBBBBBBBBBBBBBBBBBBKKKKKKKB.",
+                    ".BBBBBKKKKKKKKKBBBBBBBBBBBBBBBKKKKKKKBBBBBBBBBBBBBBBBBBBBBBBBBBBKKKKKKKBBBBKBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBKBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBKKKKKKBBBBBBBBBBBBBBBBBBBBBBBBBBBBKKKKKKBBBBBBBBBBBBBBBBBKKKKKKKBBB..",
+                    "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBKKKKKKKBBBKKKKBBBBBBBBBBBKKKKKKBBBKKKKKKKKKKKBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBKKKKKKKKBBBKKKKKBBBBBBBBBBKKKKKBBBKKKKBBKBBBBBBBBBBBBBBBBBBBHHHHHHH...",
+                    "............BBBBBBBBBBBBBBBBBBBBBBBKKKKKBBBKBBBKKKKKKKBBBKBBBKKKKBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBKKKKBBBKBBBBKKKKKKBBBBKBBBKKKKBH................................",
+                    "....................................BBBBKKKKBBBBBBBBBBBBBKKKKBBB.................................................................................................................BBBKKKKKBKKBBBBBBKKBBKKKKBBH...................................",
+                    ".....BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBKKKKKKKKKKKKKKKKKKBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBKKKKKKKKKKKKKKKKKKBBBBBBBBBBBBBBBBBBBBBBBBBHHHHHHHHHH.....",
+                }
             });
         }
 
@@ -70,8 +147,10 @@ namespace idotmatrix_gui
         {
             Color[,] canvas = new Color[32, 32];
 
-            // Get current active car
-            TunerCar activeCar = _cars[_currentCarIndex];
+            // 300 frame cycle (15 seconds per car at 20 FPS)
+            int carCycle = frameCount / 300;
+            int activeCarIndex = carCycle % _cars.Count;
+            TunerCar activeCar = _cars[activeCarIndex];
 
             // 1. Draw Sky Gradient (y=0 to y=14)
             Color skyTop = Color.FromRgb(15, 0, 30);      // Deep Indigo
@@ -97,7 +176,6 @@ namespace idotmatrix_gui
             DrawRetroSun(canvas);
 
             // 4. Draw Parallax Mountain Silhouette (y=11 to y=14)
-            // Scroll offset moves 1 pixel every 4 frames
             int mountainScroll = (frameCount / 4) % 32;
             Color mountainDark = Color.FromRgb(30, 8, 40); // Dark purple
             Color mountainCrest = Color.FromRgb(255, 0, 127); // Neon pink outline
@@ -151,15 +229,42 @@ namespace idotmatrix_gui
                 }
             }
 
-            // 8. Draw Volumetric Headlight Glow (shining right)
-            // Car starts at xPos=4, headlight is at relative x=22
-            DrawHeadlightBeam(canvas, 4 + 22, 17 + 5);
+            // 8. Calculate Scrolling position for Car
+            // xPos goes from -240 (offscreen left) to 32 (offscreen right) over 300 frame cycle
+            int localFrame = frameCount % 300;
+            int xPos = -240;
 
-            // 9. Draw Tuner Car (at x=4, y=17)
-            DrawCar(canvas, activeCar, 4, 17, frameCount);
+            if (localFrame < 80)
+            {
+                // Entry: Slowly roll in from -240 to -120 (reveals front & cabin)
+                double t = (double)localFrame / 80.0;
+                t = t * (2.0 - t); // Ease out
+                xPos = (int)(-240.0 + 120.0 * t);
+            }
+            else if (localFrame < 220)
+            {
+                // Cruise/Pass: Scroll slowly across showing full body profile from -120 to -150
+                double t = (double)(localFrame - 80) / 140.0;
+                xPos = (int)(-120.0 - 30.0 * t);
+            }
+            else if (localFrame < 265)
+            {
+                // Accelerate: Drop gear and blast off offscreen from -150 to 32
+                double t = (double)(localFrame - 220) / 45.0;
+                t = t * t; // Ease in (accelerate)
+                xPos = (int)(-150.0 + 182.0 * t);
+            }
+            else
+            {
+                // Offscreen wait
+                xPos = 32;
+            }
 
-            // 10. Draw HUD overlay showing car name for first 50 frames
-            if (frameCount < 50)
+            // 9. Draw Volumetric Headlight Glow (shining right)
+            DrawBeamsAndCar(canvas, activeCar, xPos, 8, frameCount);
+
+            // 10. Draw HUD overlay showing car name for first 60 frames of car pass
+            if (localFrame < 60 && xPos > -210)
             {
                 // Draw a sleek HUD backing bar
                 for (int y = 1; y < 8; y++)
@@ -178,7 +283,6 @@ namespace idotmatrix_gui
 
         private void DrawStars(Color[,] canvas, int frameCount)
         {
-            // Twinkling stars at fixed positions
             int[][] stars = {
                 new int[] { 3, 2 },
                 new int[] { 10, 4 },
@@ -191,7 +295,6 @@ namespace idotmatrix_gui
                 int x = stars[i][0];
                 int y = stars[i][1];
                 
-                // Twinkle cycle
                 int offset = i * 13;
                 int brightness = (int)(155 + 100 * Math.Sin((frameCount + offset) * 0.3));
                 if (brightness < 50) brightness = 50;
@@ -214,7 +317,6 @@ namespace idotmatrix_gui
                 int y = cy + dy;
                 if (y < 0 || y >= 32) continue;
 
-                // Synthwave split lines (skip drawing at horizontal gaps)
                 if (y == 8 || y == 10 || y == 12 || y == 13) continue;
 
                 double ratio = (dy + radius) / (double)radius;
@@ -239,12 +341,11 @@ namespace idotmatrix_gui
         private void DrawHeadlightBeam(Color[,] canvas, int startX, int startY)
         {
             Color glow = Color.FromRgb(255, 255, 140);
-            for (int dx = 0; dx < 10; dx++)
+            for (int dx = 0; dx < 12; dx++)
             {
                 int x = startX + dx;
                 if (x >= 32) break;
 
-                // Beam spreads vertically as it moves away
                 int spread = dx / 2;
                 for (int dy = -spread; dy <= spread; dy++)
                 {
@@ -252,7 +353,7 @@ namespace idotmatrix_gui
                     if (y >= 0 && y < 32)
                     {
                         Color current = canvas[y, x];
-                        double intensity = 0.35 * (1.0 - (double)dx / 10.0); // Fades out with distance
+                        double intensity = 0.35 * (1.0 - (double)dx / 12.0);
 
                         canvas[y, x] = Color.FromRgb(
                             (byte)(current.R * (1.0 - intensity) + glow.R * intensity),
@@ -264,169 +365,80 @@ namespace idotmatrix_gui
             }
         }
 
-        private void DrawCar(Color[,] canvas, TunerCar car, int xPos, int yPos, int frameCount)
+        private void DrawBeamsAndCar(Color[,] canvas, TunerCar car, int xPos, int yPos, int frameCount)
         {
             Color body = car.BodyColor;
             Color black = Color.FromRgb(10, 10, 15);
-            Color glass = Color.FromRgb(20, 25, 45); // Dark blue windows
+            Color glass = Color.FromRgb(30, 40, 65); // Dark blue glass
             Color headlight = Color.FromRgb(255, 255, 180);
             Color taillight = Color.FromRgb(255, 0, 0);
-            Color wheelColor = car.HasGoldWheels ? Color.FromRgb(215, 165, 30) : Color.FromRgb(95, 95, 100);
             Color exhaustFlame = Color.FromRgb(255, 120, 0);
+            Color intercooler = Color.FromRgb(200, 200, 205);
 
-            // 1. Spoiler
-            if (car.HasSpoiler)
+            // Phase 1: Draw Headlight Beams by scanning for 'H' in the grid
+            for (int r = 0; r < car.Grid.Length; r++)
             {
-                if (car.Type == 0) // GT-R spoiler: blocky / vertical fins
+                string rowStr = car.Grid[r];
+                for (int c = 0; c < rowStr.Length; c++)
                 {
-                    DrawPixel(canvas, xPos + 1, yPos + 1, black);
-                    DrawPixel(canvas, xPos + 1, yPos + 2, body);
-                    DrawPixel(canvas, xPos + 2, yPos + 1, body);
-                }
-                else if (car.Type == 1) // Supra spoiler: curved loops
-                {
-                    DrawPixel(canvas, xPos + 1, yPos + 1, body);
-                    DrawPixel(canvas, xPos + 2, yPos + 1, body);
-                    DrawPixel(canvas, xPos + 1, yPos + 2, body);
-                    DrawPixel(canvas, xPos + 3, yPos + 2, body);
-                }
-                else if (car.Type == 3) // WRX STI wing: tall, prominent
-                {
-                    DrawPixel(canvas, xPos + 1, yPos + 1, body);
-                    DrawPixel(canvas, xPos + 2, yPos + 1, body);
-                    DrawPixel(canvas, xPos + 1, yPos + 2, black);
-                    DrawPixel(canvas, xPos + 3, yPos + 2, black);
+                    if (rowStr[c] == 'H')
+                    {
+                        int targetX = xPos + c;
+                        int targetY = yPos + r;
+                        if (targetX >= 0 && targetX < 32)
+                        {
+                            DrawHeadlightBeam(canvas, targetX, targetY);
+                        }
+                    }
                 }
             }
 
-            // 2. Cabin / Roof (yPos + 2)
-            int roofStart = (car.Type == 2) ? 7 : 6; // FD is sleek and shifted back
-            int roofEnd = 13;
-            for (int x = roofStart; x <= roofEnd; x++)
+            // Phase 2: Draw the car body pixels
+            for (int r = 0; r < car.Grid.Length; r++)
             {
-                DrawPixel(canvas, xPos + x, yPos + 2, body);
-            }
+                string rowStr = car.Grid[r];
+                for (int c = 0; c < rowStr.Length; c++)
+                {
+                    char ch = rowStr[c];
+                    int targetX = xPos + c;
+                    int targetY = yPos + r;
 
-            // 3. Side Windows / Pillars (yPos + 3)
-            for (int x = roofStart - 1; x <= roofEnd + 1; x++)
-            {
-                if (x >= roofStart + 1 && x <= roofEnd - 1)
-                {
-                    DrawPixel(canvas, xPos + x, yPos + 3, glass);
-                }
-                else
-                {
-                    DrawPixel(canvas, xPos + x, yPos + 3, body);
-                }
-            }
-            // Add windshield glass slant
-            DrawPixel(canvas, xPos + roofEnd + 1, yPos + 3, glass);
-            DrawPixel(canvas, xPos + roofStart - 1, yPos + 3, glass);
+                    if (ch == '.') continue; // Transparent
 
-            // 4. Beltline (yPos + 4)
-            // Bumper to hood scoop
-            for (int x = 1; x <= 20; x++)
-            {
-                if (car.Type == 3 && x == 17) // Subaru hood scoop
-                {
-                    DrawPixel(canvas, xPos + x, yPos + 4, black);
-                }
-                else
-                {
-                    DrawPixel(canvas, xPos + x, yPos + 4, body);
+                    Color pxColor = black;
+                    if (ch == 'B') pxColor = body;
+                    else if (ch == 'K') pxColor = black;
+                    else if (ch == 'G') pxColor = glass;
+                    else if (ch == 'H') pxColor = headlight;
+                    else if (ch == 'L') pxColor = taillight;
+                    else if (ch == 'S') pxColor = intercooler;
+
+                    DrawPixel(canvas, targetX, targetY, pxColor);
                 }
             }
 
-            // 5. Main Body Belt (yPos + 5)
-            for (int x = 0; x <= 21; x++)
+            // Phase 3: Draw exhaust flame (tailpipe is at the left-most edge of the bottom rows)
+            int exhaustX = xPos;
+            int exhaustY = yPos + 17; // Exhaust at lower body level (row 17)
+            string bottomRow = car.Grid[17];
+            for (int c = 0; c < bottomRow.Length; c++)
             {
-                DrawPixel(canvas, xPos + x, yPos + 5, body);
-            }
-
-            // Headlights
-            if (car.Type == 2) // RX-7 popups are lower profile
-            {
-                DrawPixel(canvas, xPos + 20, yPos + 4, headlight);
-            }
-            else
-            {
-                DrawPixel(canvas, xPos + 21, yPos + 5, headlight);
-            }
-
-            // Taillights
-            if (car.Type == 0) // GT-R round rings
-            {
-                DrawPixel(canvas, xPos, yPos + 4, taillight);
-                DrawPixel(canvas, xPos, yPos + 5, taillight);
-            }
-            else
-            {
-                DrawPixel(canvas, xPos, yPos + 5, taillight);
-            }
-
-            // 6. Bottom body / Side skirt (yPos + 6)
-            // Leaving gaps for wheels at col 4-6 and 14-16
-            for (int x = 0; x <= 21; x++)
-            {
-                bool isWheelArch = (x >= 4 && x <= 6) || (x >= 14 && x <= 16);
-                if (!isWheelArch)
+                if (bottomRow[c] != '.')
                 {
-                    DrawPixel(canvas, xPos + x, yPos + 6, body);
+                    exhaustX = xPos + c - 1;
+                    break;
                 }
             }
 
-            // 7. Draw Wheels
-            DrawWheel(canvas, xPos + 5, yPos + 6, wheelColor, frameCount);
-            DrawWheel(canvas, xPos + 15, yPos + 6, wheelColor, frameCount);
-
-            // 8. Animated Exhaust Flame
             int exhaustOffset = frameCount % 6;
             if (exhaustOffset < 2)
             {
-                DrawPixel(canvas, xPos - 1, yPos + 6, exhaustFlame);
+                DrawPixel(canvas, exhaustX, exhaustY, exhaustFlame);
             }
             else if (exhaustOffset == 2)
             {
-                DrawPixel(canvas, xPos - 1, yPos + 6, Color.FromRgb(255, 200, 0));
-                DrawPixel(canvas, xPos - 2, yPos + 6, exhaustFlame);
-            }
-        }
-
-        private void DrawWheel(Color[,] canvas, int cx, int cy, Color metalColor, int frameCount)
-        {
-            Color darkTire = Color.FromRgb(15, 15, 20);
-
-            // Tire outline
-            DrawPixel(canvas, cx, cy - 1, darkTire);
-            DrawPixel(canvas, cx + 1, cy - 1, darkTire);
-            DrawPixel(canvas, cx - 1, cy, darkTire);
-            DrawPixel(canvas, cx + 2, cy, darkTire);
-            DrawPixel(canvas, cx - 1, cy + 1, darkTire);
-            DrawPixel(canvas, cx + 2, cy + 1, darkTire);
-            DrawPixel(canvas, cx, cy + 2, darkTire);
-            DrawPixel(canvas, cx + 1, cy + 2, darkTire);
-
-            // Spin animation
-            int spin = (frameCount / 2) % 4;
-            if (spin == 0)
-            {
-                DrawPixel(canvas, cx, cy, metalColor);
-                DrawPixel(canvas, cx + 1, cy + 1, metalColor);
-            }
-            else if (spin == 1)
-            {
-                DrawPixel(canvas, cx + 1, cy, metalColor);
-                DrawPixel(canvas, cx, cy + 1, metalColor);
-            }
-            else if (spin == 2)
-            {
-                DrawPixel(canvas, cx, cy + 1, metalColor);
-                DrawPixel(canvas, cx + 1, cy, metalColor);
-            }
-            else
-            {
-                DrawPixel(canvas, cx + 1, cy + 1, metalColor);
-                DrawPixel(canvas, cx, cy, metalColor);
+                DrawPixel(canvas, exhaustX, exhaustY, Color.FromRgb(255, 200, 0));
+                DrawPixel(canvas, exhaustX - 1, exhaustY, exhaustFlame);
             }
         }
 
@@ -440,8 +452,6 @@ namespace idotmatrix_gui
 
         public void Stop()
         {
-            // Move to next car design on scene reset
-            _currentCarIndex = (_currentCarIndex + 1) % _cars.Count;
         }
     }
 }

@@ -60,7 +60,7 @@ namespace idotmatrix_gui
             Items.Add(new CarouselItem(new PokemonChallengeScene(), true, 10));
             Items.Add(new CarouselItem(new CountryGuessScene(), true, 10));
             Items.Add(new CarouselItem(new MathGameScene(), true, 10));
-            Items.Add(new CarouselItem(new CarHighwayScene(), true, 12)); // Neon JDM highway ride scene (12s)
+            Items.Add(new CarouselItem(new CarHighwayScene(), true, 30)); // Neon JDM highway ride scene (30s)
             Items.Add(new CarouselItem(new WebcamScene(), false, 10)); // Disabled by default
         }
 
