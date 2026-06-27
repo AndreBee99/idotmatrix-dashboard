@@ -3,6 +3,7 @@ using System.IO;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
@@ -186,9 +187,23 @@ namespace idotmatrix_gui
                     var root = doc.RootElement;
                     _pokemonName = root.GetProperty("name").GetString() ?? "Unknown";
                     
-                    // Extract default front sprite
-                    var sprites = root.GetProperty("sprites");
-                    string? spriteUrl = sprites.GetProperty("front_default").GetString();
+                    // Extract Gen 5 Black/White sprite if available (clean pixel art), fallback to front_default
+                    string? spriteUrl = null;
+                    if (root.TryGetProperty("sprites", out var spritesProp))
+                    {
+                        if (spritesProp.TryGetProperty("versions", out var versionsProp) &&
+                            versionsProp.TryGetProperty("generation-v", out var genVProp) &&
+                            genVProp.TryGetProperty("black-white", out var bwProp) &&
+                            bwProp.TryGetProperty("front_default", out var bwFrontProp))
+                        {
+                            spriteUrl = bwFrontProp.GetString();
+                        }
+
+                        if (string.IsNullOrEmpty(spriteUrl) && spritesProp.TryGetProperty("front_default", out var frontDefaultProp))
+                        {
+                            spriteUrl = frontDefaultProp.GetString();
+                        }
+                    }
 
                     if (!string.IsNullOrEmpty(spriteUrl))
                     {
@@ -242,22 +257,8 @@ namespace idotmatrix_gui
                             int cropW = maxX - minX + 1;
                             int cropH = maxY - minY + 1;
 
-                            // Extract cropped pixels
-                            Color[,] cropPixels = new Color[cropH, cropW];
-                            for (int y = 0; y < cropH; y++)
-                            {
-                                for (int x = 0; x < cropW; x++)
-                                {
-                                    int srcX = minX + x;
-                                    int srcY = minY + y;
-                                    int idx = srcY * stride + srcX * 4;
-                                    byte b = pixels[idx];
-                                    byte g = pixels[idx + 1];
-                                    byte r = pixels[idx + 2];
-                                    byte a = pixels[idx + 3];
-                                    cropPixels[y, x] = Color.FromArgb(a, r, g, b);
-                                }
-                            }
+                            // Create CroppedBitmap using bounding box
+                            var croppedBitmap = new CroppedBitmap(converted, new Int32Rect(minX, minY, cropW, cropH));
 
                             // Scale cropped image to fit the top area of the 32x32 display (y=0 to y=25, height 26, width 32)
                             double targetMaxW = 32.0;
@@ -269,17 +270,27 @@ namespace idotmatrix_gui
 
                             if (scaleVal < 0.1) scaleVal = 1.0;
 
-                            int newW = (int)Math.Max(1, Math.Floor(cropW * scaleVal));
-                            int newH = (int)Math.Max(1, Math.Floor(cropH * scaleVal));
+                            // Scale using TransformedBitmap (uses Bilinear filtering for smooth downsampling)
+                            var scaleTransform = new ScaleTransform(scaleVal, scaleVal);
+                            var scaledBitmap = new TransformedBitmap(croppedBitmap, scaleTransform);
+
+                            int newW = scaledBitmap.PixelWidth;
+                            int newH = scaledBitmap.PixelHeight;
+                            int scaledStride = newW * 4;
+                            byte[] scaledBytes = new byte[newH * scaledStride];
+                            scaledBitmap.CopyPixels(scaledBytes, scaledStride, 0);
 
                             Color[,] scaledPixels = new Color[newH, newW];
                             for (int y = 0; y < newH; y++)
                             {
                                 for (int x = 0; x < newW; x++)
                                 {
-                                    int srcX = (int)Math.Min(cropW - 1, Math.Floor(x / scaleVal));
-                                    int srcY = (int)Math.Min(cropH - 1, Math.Floor(y / scaleVal));
-                                    scaledPixels[y, x] = cropPixels[srcY, srcX];
+                                    int idx = y * scaledStride + x * 4;
+                                    byte b = scaledBytes[idx];
+                                    byte g = scaledBytes[idx + 1];
+                                    byte r = scaledBytes[idx + 2];
+                                    byte a = scaledBytes[idx + 3];
+                                    scaledPixels[y, x] = Color.FromArgb(a, r, g, b);
                                 }
                             }
 
