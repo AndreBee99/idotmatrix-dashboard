@@ -149,9 +149,8 @@ namespace idotmatrix_gui
         {
             try
             {
-                // Classic Pixel Art Generations 1 to 5 (IDs 1 to 649)
-                Random rand = new Random();
-                int id = rand.Next(1, 650);
+                // Force Oshawott (National Pokédex ID 501)
+                int id = 501;
 
                 string apiUrl = $"https://pokeapi.co/api/v2/pokemon/{id}";
                 string json = await _httpClient.GetStringAsync(apiUrl);
