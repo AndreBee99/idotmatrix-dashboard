@@ -444,6 +444,28 @@ namespace idotmatrix_gui
             SaveCurrentConfig();
         }
 
+        private void BtnSavePokemonDebug_Click(object sender, RoutedEventArgs e)
+        {
+            string idOrName = TxtPokemonDebugId.Text.Trim();
+            if (!string.IsNullOrEmpty(idOrName))
+            {
+                PokemonChallengeScene.ForcedPokemonIdOrName = idOrName;
+                PokemonChallengeScene.ResetActiveInstance();
+                TxtPokemonDebugStatus.Text = $"Mode: Forced ({idOrName})";
+                TxtPokemonDebugStatus.Foreground = new SolidColorBrush(Color.FromRgb(255, 120, 0)); // Orange
+                LogToTerminal($"Forced Pokemon to: {idOrName}. Reset active challenge scene.");
+            }
+        }
+
+        private void BtnResetPokemonNormal_Click(object sender, RoutedEventArgs e)
+        {
+            PokemonChallengeScene.ForcedPokemonIdOrName = null;
+            PokemonChallengeScene.ResetActiveInstance();
+            TxtPokemonDebugStatus.Text = "Mode: Normal (Random)";
+            TxtPokemonDebugStatus.Foreground = new SolidColorBrush(Color.FromRgb(139, 139, 159)); // Muted
+            LogToTerminal("Reset Pokemon challenge scene to Normal (Random) mode.");
+        }
+
         // Config Saving & Loading Helpers
         private void SaveCurrentConfig()
         {

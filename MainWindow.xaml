@@ -391,6 +391,28 @@
                             <Button x:Name="BtnSaveCalendar" Content="SAVE" Grid.Column="1" Margin="6,0,0,0" Style="{StaticResource CyanButton}" Click="BtnSaveCalendar_Click" Width="80"/>
                         </Grid>
                         <TextBlock Text="e.g. Google Calendar Secret iCal Address" FontSize="9" Foreground="#555" Margin="0,0,0,5"/>
+
+                        <!-- Pokémon Debugger Settings -->
+                        <Separator Background="{StaticResource BorderBrush}" Margin="0,8,0,12"/>
+                        <TextBlock Text="POKÉMON DEBUGGER" FontSize="11" FontWeight="Bold" Foreground="{StaticResource TextMuted}" Margin="0,0,0,8"/>
+                        
+                        <Grid Margin="0,4,0,4">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox x:Name="TxtPokemonDebugId" Text="501" Grid.Column="0" VerticalContentAlignment="Center" ToolTip="Enter Pokémon Name or Pokedex ID (1-649)"/>
+                            <Button x:Name="BtnSavePokemonDebug" Content="FORCE ID" Grid.Column="1" Margin="6,0,0,0" Style="{StaticResource CyanButton}" Click="BtnSavePokemonDebug_Click" Width="80"/>
+                        </Grid>
+                        
+                        <Grid Margin="0,4,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock x:Name="TxtPokemonDebugStatus" Text="Mode: Normal (Random)" FontSize="10" Foreground="{StaticResource TextMuted}" VerticalAlignment="Center"/>
+                            <Button x:Name="BtnResetPokemonNormal" Content="RESET NORMAL" Grid.Column="1" Style="{StaticResource MagentaButton}" Click="BtnResetPokemonNormal_Click" Width="100" Padding="0,4" FontSize="10"/>
+                        </Grid>
                     </StackPanel>
                 </Border>
 

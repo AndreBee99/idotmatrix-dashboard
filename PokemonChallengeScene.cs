@@ -26,9 +26,27 @@ namespace idotmatrix_gui
         public bool CustomCompletion => true;
         public bool IsDone => _isDone;
 
+        public static string? ForcedPokemonIdOrName { get; set; } = null;
+        public static bool IsForcedMode => !string.IsNullOrEmpty(ForcedPokemonIdOrName);
+        public static event Action? RequestReset;
+
+        public static void ResetActiveInstance()
+        {
+            RequestReset?.Invoke();
+        }
+
         public PokemonChallengeScene()
         {
             _httpClient.DefaultRequestHeaders.Add("User-Agent", "iDotMatrix-WPF-Client");
+            RequestReset += HandleRequestReset;
+        }
+
+        private void HandleRequestReset()
+        {
+            _pokemonName = "";
+            _isLoaded = false;
+            _revealStartFrame = -1;
+            _isDone = false;
         }
 
         public Color[,] DrawFrame(int frameCount)
@@ -149,10 +167,18 @@ namespace idotmatrix_gui
         {
             try
             {
-                // Force Oshawott (National Pokédex ID 501)
-                int id = 501;
+                string idOrName;
+                if (IsForcedMode)
+                {
+                    idOrName = ForcedPokemonIdOrName!;
+                }
+                else
+                {
+                    Random rand = new Random();
+                    idOrName = rand.Next(1, 650).ToString();
+                }
 
-                string apiUrl = $"https://pokeapi.co/api/v2/pokemon/{id}";
+                string apiUrl = $"https://pokeapi.co/api/v2/pokemon/{idOrName.ToLower().Trim()}";
                 string json = await _httpClient.GetStringAsync(apiUrl);
 
                 using (JsonDocument doc = JsonDocument.Parse(json))
